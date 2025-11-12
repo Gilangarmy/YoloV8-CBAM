@@ -12,8 +12,8 @@ import torch.nn as nn
 
 from ultralytics.nn.autobackend import check_class_names
 from ultralytics.nn.modules import (
-    CBAM,
     AIFI,
+    CBAM,
     C1,
     C2,
     C2PSA,
@@ -1610,13 +1610,13 @@ def parse_model(d, ch, verbose=True):
                     args.extend((True, 1.2))
             if m is C2fCIB:
                 legacy = False
+        elif m is AIFI:
+            args = [ch[f], *args]
         elif m is CBAM:
             c1, c2 = ch[f], args[0]
             if c2 != nc:
                 c2 = make_divisible(min(c2, max_channels) * width, 8)
             args = [c1, *args[1:]]
-        elif m is AIFI:
-            args = [ch[f], *args]
         elif m in frozenset({HGStem, HGBlock}):
             c1, cm, c2 = ch[f], args[0], args[1]
             args = [c1, cm, c2, *args[2:]]
